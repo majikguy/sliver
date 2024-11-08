@@ -27,6 +27,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"embed"
 
 	ver "github.com/bishopfox/sliver/client/version"
 	"github.com/bishopfox/sliver/server/log"
@@ -144,7 +145,7 @@ under certain conditions; type 'licenses' for details.`)
 
 // English - Extracts the english dictionary for the english encoder
 func English() []string {
-	rawEnglish, err := assetsFs.ReadFile("fs/english.txt")
+	rawEnglish, err := embed.FS.ReadFile("fs/english.txt")
 	if err != nil {
 		return []string{}
 	}
@@ -154,7 +155,7 @@ func English() []string {
 
 // GetGPGPublicKey - Return the GPG public key from assets
 func GetGPGPublicKey() (*packet.PublicKey, error) {
-	rawPublicKey, err := assetsFs.ReadFile("fs/sliver.asc")
+	rawPublicKey, err := embed.FS.ReadFile("fs/sliver.asc")
 	if err != nil {
 		return nil, err
 	}
