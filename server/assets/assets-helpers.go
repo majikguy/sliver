@@ -38,6 +38,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"embed"
 
 	protobufs "github.com/bishopfox/sliver/protobuf"
 	"github.com/bishopfox/sliver/util"
@@ -151,7 +152,7 @@ func setupZig(appDir string) error {
 	if runtime.GOOS != "windows" {
 		// Everything except windows
 		zigXzFSPath := path.Join("fs", runtime.GOOS, runtime.GOARCH, "zig.tar.xz")
-		zigXzBuf, err := assetsFs.ReadFile(zigXzFSPath)
+		zigXzBuf, err := embed.FS.ReadFile(zigXzFSPath)
 		if err != nil {
 			setupLog.Errorf("static asset not found: %s", zigXzFSPath)
 			return err
@@ -167,7 +168,7 @@ func setupZig(appDir string) error {
 	} else {
 		// Windows only, since it's an awful operating system
 		zigZipFSPath := path.Join("fs", runtime.GOOS, runtime.GOARCH, "zig.zip")
-		zigZipBuf, err := assetsFs.ReadFile(zigZipFSPath)
+		zigZipBuf, err := embed.FS.ReadFile(zigZipFSPath)
 		if err != nil {
 			setupLog.Errorf("static asset not found: %s", zigZipFSPath)
 			return err
@@ -207,7 +208,7 @@ func setupGo(appDir string) error {
 
 	// Go compiler and stdlib
 	goZipFSPath := path.Join("fs", runtime.GOOS, runtime.GOARCH, "go.zip")
-	goZip, err := assetsFs.ReadFile(goZipFSPath)
+	goZip, err := embed.FS.ReadFile(goZipFSPath)
 	if err != nil {
 		setupLog.Errorf("static asset not found: %s", goZipFSPath)
 		return err
@@ -222,7 +223,7 @@ func setupGo(appDir string) error {
 		return err
 	}
 
-	goSrcZip, err := assetsFs.ReadFile("fs/src.zip")
+	goSrcZip, err := embed.FS.ReadFile("fs/src.zip")
 	if err != nil {
 		setupLog.Info("static asset not found: src.zip")
 		return err
@@ -241,7 +242,7 @@ func setupGo(appDir string) error {
 		garbleFileName = "garble.exe"
 	}
 	garbleAssetPath := path.Join("fs", runtime.GOOS, runtime.GOARCH, garbleFileName)
-	garbleFile, err := assetsFs.ReadFile(garbleAssetPath)
+	garbleFile, err := embed.FS.ReadFile(garbleAssetPath)
 	if err != nil {
 		setupLog.Errorf("Static asset not found: %s", garbleFile)
 		return err
@@ -259,7 +260,7 @@ func setupGo(appDir string) error {
 func setupSGN(appDir string) error {
 	goBinPath := filepath.Join(appDir, "go", "bin")
 	sgnZipFSPath := path.Join("fs", runtime.GOOS, runtime.GOARCH, "sgn.zip")
-	sgnZip, err := assetsFs.ReadFile(sgnZipFSPath)
+	sgnZip, err := embed.FS.ReadFile(sgnZipFSPath)
 	if err != nil {
 		setupLog.Errorf("static asset not found: %s", sgnZipFSPath)
 		return err
@@ -707,13 +708,13 @@ func unzip(src string, dest string) ([]string, error) {
 }
 
 func setupCodenames(appDir string) error {
-	nouns, err := assetsFs.ReadFile("fs/nouns.txt")
+	nouns, err := embed.FS.ReadFile("fs/nouns.txt")
 	if err != nil {
 		setupLog.Infof("nouns.txt asset not found")
 		return err
 	}
 
-	adjectives, err := assetsFs.ReadFile("fs/adjectives.txt")
+	adjectives, err := embed.FS.ReadFile("fs/adjectives.txt")
 	if err != nil {
 		setupLog.Infof("adjectives.txt asset not found")
 		return err
